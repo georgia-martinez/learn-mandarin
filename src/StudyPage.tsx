@@ -13,7 +13,6 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import type { FlashCard } from './flashcardStorage'
-import { loadFlashcards } from './flashcardStorage'
 import {
   getFieldValue,
   type StudyConfig,
@@ -66,70 +65,85 @@ type DisplayItem = {
   label: string
   value: string
   lang: string
+  /** Second line (e.g. traditional under merged hanzi). */
+  secondLine?: string
+  secondLineLang?: string
   alwaysShowLabel?: boolean
 }
 
+type StudyState = StudyConfig & {
+  cards: FlashCard[]
+  deckId: string
+}
+
+function fieldLang(f: StudyField): string {
+  if (f === 'english') {
+    return 'en'
+  }
+  if (f === 'simplified') {
+    return 'zh-Hans'
+  }
+  if (f === 'traditional') {
+    return 'zh-Hant'
+  }
+  return 'zh-Latn'
+}
+
 function buildDisplayItems(card: FlashCard, fields: StudyField[]): DisplayItem[] {
-  const hasBoth = fields.includes('simplified') && fields.includes('traditional')
+  const hasBothHanzi = fields.includes('simplified') && fields.includes('traditional')
+  const out: DisplayItem[] = []
+  let mergedHanziEmitted = false
 
-  if (hasBoth) {
-    const simplifiedVal = getFieldValue(card, 'simplified')
-    const traditionalVal = getFieldValue(card, 'traditional')
-    const sameOrNoTraditional = !traditionalVal || simplifiedVal === traditionalVal
+  for (const field of fields) {
+    if (hasBothHanzi && (field === 'simplified' || field === 'traditional')) {
+      if (!mergedHanziEmitted) {
+        mergedHanziEmitted = true
+        const simp = getFieldValue(card, 'simplified').trim()
+        const trad = getFieldValue(card, 'traditional').trim()
+        const primary = simp || trad || '—'
+        const showSecondLine = Boolean(simp && trad && trad !== simp)
+        const primaryLang = simp ? 'zh-Hans' : trad ? 'zh-Hant' : 'zh-Hans'
+        out.push({
+          key: 'simplified-traditional',
+          label: 'Simplified / Traditional',
+          value: primary,
+          lang: primaryLang,
+          secondLine: showSecondLine ? trad : undefined,
+          secondLineLang: showSecondLine ? 'zh-Hant' : undefined,
+          alwaysShowLabel: true,
+        })
+      }
+      continue
+    }
 
-    const chineseItems: DisplayItem[] = sameOrNoTraditional
-      ? [
-          {
-            key: 'simplified-traditional',
-            label: 'Simplified / Traditional',
-            value: simplifiedVal || '—',
-            lang: 'zh-Hans',
-            alwaysShowLabel: true,
-          },
-        ]
-      : [
-          {
-            key: 'simplified',
-            label: STUDY_FIELD_LABELS['simplified'],
-            value: simplifiedVal || '—',
-            lang: 'zh-Hans',
-          },
-          {
-            key: 'traditional',
-            label: STUDY_FIELD_LABELS['traditional'],
-            value: traditionalVal,
-            lang: 'zh-Hant',
-          },
-        ]
+    if (field === 'traditional' && fields.length === 1 && !getFieldValue(card, 'traditional').trim()) {
+      out.push({
+        key: 'simplified-fallback',
+        label: STUDY_FIELD_LABELS.simplified,
+        value: getFieldValue(card, 'simplified') || '—',
+        lang: 'zh-Hans',
+      })
+      continue
+    }
 
-    const rest = fields
-      .filter((f) => f !== 'simplified' && f !== 'traditional')
-      .map((f) => ({
-        key: f,
-        label: STUDY_FIELD_LABELS[f],
-        value: getFieldValue(card, f) || '—',
-        lang: f === 'english' ? 'en' : 'zh-Latn',
-      }))
-    const insertAt = Math.min(fields.indexOf('simplified'), fields.indexOf('traditional'))
-    return [...rest.slice(0, insertAt), ...chineseItems, ...rest.slice(insertAt)]
+    out.push({
+      key: field,
+      label: STUDY_FIELD_LABELS[field],
+      value: getFieldValue(card, field) || '—',
+      lang: fieldLang(field),
+    })
   }
 
-  return fields.map((f) => {
-    let value = getFieldValue(card, f)
-    if (f === 'traditional' && fields.length === 1 && !value) {
-      value = getFieldValue(card, 'simplified')
-    }
-    return {
-      key: f,
-      label: STUDY_FIELD_LABELS[f],
-      value: value || '—',
-      lang: f === 'english' ? 'en' : f === 'simplified' ? 'zh-Hans' : f === 'traditional' ? 'zh-Hant' : 'zh-Latn',
-    }
-  })
+  return out
 }
 
 function renderFaceContent(card: FlashCard, fields: StudyField[], role: 'front' | 'back') {
   const items = buildDisplayItems(card, fields)
+  const fontSizeForKey = (key: string) =>
+    key === 'pinyin'
+      ? { xs: '1.5rem', sm: '1.75rem' }
+      : { xs: '1.75rem', sm: '2.25rem' }
+
   return (
     <Stack spacing={1.5} sx={{ alignItems: 'center', textAlign: 'center', maxWidth: '100%' }}>
       {items.map((item) => (
@@ -144,23 +158,33 @@ function renderFaceContent(card: FlashCard, fields: StudyField[], role: 'front' 
             component="div"
             lang={item.lang}
             sx={{
-              fontSize: items.length > 1
-                ? { xs: '1.5rem', sm: '1.75rem' }
-                : item.key === 'pinyin'
-                  ? { xs: '1.5rem', sm: '1.75rem' }
-                  : { xs: '1.75rem', sm: '2.25rem' },
+              fontSize: items.length > 1 ? { xs: '1.5rem', sm: '1.75rem' } : fontSizeForKey(item.key),
               wordBreak: 'break-word',
             }}
           >
             {item.value}
           </Typography>
+          {item.secondLine ? (
+            <Typography
+              variant="h4"
+              component="div"
+              lang={item.secondLineLang}
+              sx={{
+                mt: 1,
+                fontSize: items.length > 1 ? { xs: '1.5rem', sm: '1.75rem' } : fontSizeForKey('traditional'),
+                wordBreak: 'break-word',
+              }}
+            >
+              {item.secondLine}
+            </Typography>
+          ) : null}
         </Box>
       ))}
     </Stack>
   )
 }
 
-function isValidStudyState(s: unknown): s is StudyConfig {
+function isValidStudyState(s: unknown): s is StudyState {
   if (!s || typeof s !== 'object') {
     return false
   }
@@ -175,14 +199,15 @@ function isValidStudyState(s: unknown): s is StudyConfig {
       (x) =>
         x === 'pinyin' || x === 'simplified' || x === 'traditional' || x === 'english',
     )
-  return ok(f) && ok(b)
+  if (!ok(f) || !ok(b)) return false
+  if (!Array.isArray(o.cards)) return false
+  if (typeof o.deckId !== 'string') return false
+  return true
 }
 
 export default function StudyPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const [cards, setCards] = useState<FlashCard[]>([])
-  const [loadReady, setLoadReady] = useState(false)
   const [index, setIndex] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
   /** Incremented on each card change; drives enter animation. */
@@ -191,53 +216,28 @@ export default function StudyPage() {
   const [cardStep, setCardStep] = useState<'next' | 'prev' | null>(null)
   const state = isValidStudyState(location.state) ? location.state : null
 
-  useEffect(() => {
-    if (!state) {
-      return
-    }
-    let cancel = false
-    void (async () => {
-      setLoadReady(false)
-      setCards([])
-      setIndex(0)
-      setIsFlipped(false)
-      setSlideKey(0)
-      setCardStep(null)
-      const loaded = await loadFlashcards()
-      if (cancel) {
-        return
-      }
-      setCards(loaded)
-      setLoadReady(true)
-    })()
-    return () => {
-      cancel = true
-    }
-  }, [state])
-
   useLayoutEffect(() => {
     if (!state) {
       void navigate('/', { replace: true })
     }
   }, [state, navigate])
 
+  const cards = state?.cards ?? []
+  const n = cards.length
+
   const go = useCallback(
     (delta: number) => {
-      if (cards.length === 0) {
-        return
-      }
+      if (n === 0) return
       setCardStep(delta > 0 ? 'next' : 'prev')
       setSlideKey((k) => k + 1)
-      setIndex((i) => (i + delta + cards.length) % cards.length)
+      setIndex((i) => (i + delta + n) % n)
       setIsFlipped(false)
     },
-    [cards.length],
+    [n],
   )
 
   useEffect(() => {
-    if (!state || !loadReady || cards.length === 0) {
-      return
-    }
+    if (!state || n === 0) return
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement
       if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable) {
@@ -260,22 +260,21 @@ export default function StudyPage() {
     }
     window.addEventListener('keydown', onKey, { capture: true })
     return () => window.removeEventListener('keydown', onKey, { capture: true })
-  }, [state, loadReady, cards.length, go])
+  }, [state, n, go])
 
   if (!state) {
     return null
   }
 
+  const backPath = state.deckId ? `/deck/${state.deckId}` : '/'
   const current = cards[index]
-  const n = cards.length
-  const showEmpty = loadReady && n === 0
-  const showLoading = !loadReady
+  const showEmpty = n === 0
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <AppBar position="static" color="primary" enableColorOnDark>
+      <AppBar position="sticky" color="primary" enableColorOnDark>
         <Toolbar>
-          <IconButton color="inherit" edge="start" onClick={() => void navigate('/')} aria-label="Back">
+          <IconButton color="inherit" edge="start" onClick={() => void navigate(backPath)} aria-label="Back">
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -295,13 +294,11 @@ export default function StudyPage() {
           px: 2,
         }}
       >
-        {showLoading ? (
-          <Typography>Loading…</Typography>
-        ) : showEmpty ? (
+        {showEmpty ? (
           <Stack spacing={2} sx={{ alignItems: 'center' }}>
             <Typography>No cards to study. Add cards in the list and try again.</Typography>
-            <Button variant="outlined" onClick={() => void navigate('/')}>
-              Back to vocabulary
+            <Button variant="outlined" onClick={() => void navigate(backPath)}>
+              Back to deck
             </Button>
           </Stack>
         ) : (
