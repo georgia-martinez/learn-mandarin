@@ -102,5 +102,95 @@
         "english": "her"
       }
     ]
+  },
+  {
+    "id": "8d7695f9-599c-44a6-b966-a19f0926ab1b",
+    "title": "Lesson 2",
+    "cards": [
+      {
+        "id": "6eec22f2-ddb0-455f-8690-998bd9cc861d",
+        "simplified": "有",
+        "traditional": "",
+        "pinyin": "yǒu",
+        "english": "to have, there is / are"
+      },
+      {
+        "id": "a1d3462c-1ed9-4f06-9e67-f3bc31d79d67",
+        "simplified": "两",
+        "traditional": "兩",
+        "pinyin": "liǎng",
+        "english": "two (to express for quantity)"
+      },
+      {
+        "id": "2effdab0-7b07-4bd0-b9de-b697870b5dce",
+        "simplified": "个",
+        "traditional": "個",
+        "pinyin": "ge",
+        "english": "generic measure word"
+      },
+      {
+        "id": "18b36238-f8a3-4dea-abe4-0138eeb03223",
+        "simplified": "弟弟",
+        "traditional": "",
+        "pinyin": "dìdì",
+        "english": "younger brother"
+      },
+      {
+        "id": "949e2d03-4cb3-4391-a596-6ecd41722661",
+        "simplified": "哥哥",
+        "traditional": "",
+        "pinyin": "gēge",
+        "english": "older brother"
+      },
+      {
+        "id": "971476f0-e714-4516-b05a-d52fce9d5b57",
+        "simplified": "妹妹",
+        "traditional": "",
+        "pinyin": "mèimei",
+        "english": "younger sister"
+      },
+      {
+        "id": "46e56f37-8ef6-4b6d-ac43-970c52ccf2bc",
+        "simplified": "姐姐",
+        "traditional": "姊姊",
+        "pinyin": "jiějie",
+        "english": "older sister"
+      },
+      {
+        "id": "0d4b9647-1c5a-40c0-9df6-6fdd9d00ba0f",
+        "simplified": "兄弟姐妹",
+        "traditional": "兄弟姊妹",
+        "pinyin": "xiōngdì jiěmèi",
+        "english": "siblings"
+      },
+      {
+        "id": "91f200ff-6894-45a2-9389-edd042664f98",
+        "simplified": "吗",
+        "traditional": "嗎",
+        "pinyin": "ma",
+        "english": "question particle"
+      },
+      {
+        "id": "c4dcb57a-2a48-436e-87df-0781682cf900",
+        "simplified": "也",
+        "traditional": "",
+        "pinyin": "yě",
+        "english": "also"
+      },
+      {
+        "id": "20871fd7-2c8a-4fc7-b944-cd3d80cef9ef",
+        "simplified": "没",
+        "traditional": "沒",
+        "pinyin": "méi",
+        "english": "not"
+      },
+      {
+        "id": "77b41fd0-b57f-44fe-b02f-1fb74ecd8198",
+        "simplified": "只 ",
+        "traditional": "",
+        "pinyin": "zhì",
+        "english": "only"
+      }
+    ]
   }
 ]

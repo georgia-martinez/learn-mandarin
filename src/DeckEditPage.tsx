@@ -40,6 +40,7 @@ export default function DeckEditPage() {
   const appendingRef = useRef(false)
   const cardsContainerRef = useRef<HTMLDivElement>(null)
   const scrollSpeedRef = useRef(0)
+  const dragFromInputRef = useRef(false)
   const scrollRafRef = useRef<number | null>(null)
 
   const stopEdgeScroll = () => {
@@ -173,8 +174,7 @@ export default function DeckEditPage() {
   // --- Drag handlers ---
 
   const handleDragStart = (e: React.DragEvent<HTMLElement>, index: number) => {
-    const target = e.target as HTMLElement
-    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+    if (dragFromInputRef.current) {
       e.preventDefault()
       return
     }
@@ -339,6 +339,10 @@ export default function DeckEditPage() {
                 {/* Card row */}
                 <Box
                   draggable
+                  onMouseDown={(e) => {
+                    const t = e.target as HTMLElement
+                    dragFromInputRef.current = t.tagName === 'INPUT' || t.tagName === 'TEXTAREA'
+                  }}
                   onDragStart={(e) => handleDragStart(e, i)}
                   onDragEnd={handleDragEnd}
                   onDragOver={(e) => handleCardDragOver(e, i)}
