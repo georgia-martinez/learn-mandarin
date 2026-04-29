@@ -357,20 +357,41 @@ export default function DeckEditPage() {
                         useFlexGap
                         sx={{ alignItems: 'flex-start', width: '100%', flexWrap: { xs: 'wrap', lg: 'nowrap' } }}
                       >
-                        {/* Drag handle */}
-                        <Box
+                        {/* Card number + drag handle */}
+                        <Stack
+                          direction="column"
+                          spacing={0.25}
                           sx={{
-                            display: 'flex',
                             alignSelf: 'center',
                             alignItems: 'center',
-                            color: 'text.disabled',
-                            cursor: isDragging && draggingIndex === i ? 'grabbing' : 'grab',
                             flexShrink: 0,
                             ml: -0.5,
                           }}
                         >
-                          <DragIndicatorIcon />
-                        </Box>
+                          <Typography
+                            component="span"
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{
+                              textAlign: 'center',
+                              fontVariantNumeric: 'tabular-nums',
+                              userSelect: 'none',
+                              lineHeight: 1.2,
+                            }}
+                          >
+                            {i + 1}
+                          </Typography>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              color: 'text.disabled',
+                              cursor: isDragging && draggingIndex === i ? 'grabbing' : 'grab',
+                            }}
+                          >
+                            <DragIndicatorIcon />
+                          </Box>
+                        </Stack>
 
                         {/* Fields */}
                         <Stack
