@@ -4,6 +4,8 @@ export type FlashCard = {
   traditional: string
   pinyin: string
   english: string
+  /** User-marked for focused study; persisted with the deck. */
+  starred: boolean
 }
 
 const LOCAL_STORAGE_KEY = 'learn-mandarin-flashcards'
@@ -24,6 +26,7 @@ function normalizeOne(row: unknown): FlashCard | null {
     traditional: str(r.traditional),
     pinyin: str(r.pinyin),
     english: str(r.english),
+    starred: typeof r.starred === 'boolean' ? r.starred : false,
   }
 }
 

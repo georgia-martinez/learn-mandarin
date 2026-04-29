@@ -8,98 +8,112 @@
         "simplified": "你",
         "traditional": "",
         "pinyin": "nǐ",
-        "english": "you"
+        "english": "you",
+        "starred": false
       },
       {
         "id": "1da67310-d502-45cf-8f6b-99d99cd5030c",
         "simplified": "好",
         "traditional": "",
         "pinyin": "hǎo",
-        "english": "good"
+        "english": "good",
+        "starred": false
       },
       {
         "id": "b6775a87-f6d3-46b3-910b-0cae25f3bf73",
         "simplified": "我",
         "traditional": "",
         "pinyin": "wǒ",
-        "english": "I, me"
+        "english": "I, me",
+        "starred": false
       },
       {
         "id": "b8102100-7995-436c-9077-cf2d07d3774b",
         "simplified": "姓",
         "traditional": "",
         "pinyin": "xìng",
-        "english": "to be surnamed"
+        "english": "to be surnamed",
+        "starred": true
       },
       {
         "id": "6066c187-2ab4-418c-93f6-e5774a332f8e",
         "simplified": "王明文",
         "traditional": "",
         "pinyin": "Wáng Míngwén",
-        "english": ""
+        "english": "",
+        "starred": false
       },
       {
         "id": "3195560d-823a-48d8-b701-cfc97055cab7",
         "simplified": "叫",
         "traditional": "",
         "pinyin": "jiào",
-        "english": "to be called"
+        "english": "to be called",
+        "starred": false
       },
       {
         "id": "7aab65fa-d48e-46a4-b80d-a792ab1f0d27",
         "simplified": "什么",
         "traditional": "什麼",
         "pinyin": "shéme",
-        "english": "what"
+        "english": "what",
+        "starred": false
       },
       {
         "id": "1b1a15b4-9e8a-432a-ad08-6765249610b1",
         "simplified": "名字",
         "traditional": "",
         "pinyin": "míngzi",
-        "english": "name"
+        "english": "name",
+        "starred": true
       },
       {
         "id": "46bfae85-5d25-498c-b16f-f30815e2bab6",
         "simplified": "是",
         "traditional": "",
         "pinyin": "shì",
-        "english": "to be"
+        "english": "to be",
+        "starred": false
       },
       {
         "id": "eadfa9e2-3b13-4075-b48d-cf42d3924da0",
         "simplified": "人",
         "traditional": "",
         "pinyin": "rén",
-        "english": "people, person"
+        "english": "people, person",
+        "starred": false
       },
       {
         "id": "4857ca98-2fcb-4a18-b9ed-44409d06f355",
         "simplified": "美国",
         "traditional": "美國",
         "pinyin": "Měiguó",
-        "english": "America"
+        "english": "America",
+        "starred": false
       },
       {
         "id": "917889fa-8ef2-4780-b758-53af3a234bae",
         "simplified": "台湾",
         "traditional": "臺灣",
         "pinyin": "Táiwān",
-        "english": "Taiwan"
+        "english": "Taiwan",
+        "starred": false
       },
       {
         "id": "e942c7c3-dd17-4384-bbc4-c12790caef66",
         "simplified": "他",
         "traditional": "",
         "pinyin": "tā",
-        "english": "he"
+        "english": "he",
+        "starred": false
       },
       {
         "id": "18aa43f6-3902-49c2-bc8f-9a7e9a5daed4",
         "simplified": "她",
         "traditional": "",
         "pinyin": "tā",
-        "english": "her"
+        "english": "her",
+        "starred": false
       }
     ]
   },
@@ -626,140 +640,160 @@
         "simplified": "运动",
         "traditional": "運動",
         "pinyin": "yùndòng",
-        "english": "to exercise"
+        "english": "to exercise",
+        "starred": false
       },
       {
         "id": "e1f3589d-ef3e-4124-a29f-47634447372a",
         "simplified": "做",
         "traditional": "",
         "pinyin": "zuò",
-        "english": "to do"
+        "english": "to do",
+        "starred": false
       },
       {
         "id": "a7c01009-8af6-439c-bfd3-8bc63c67df9d",
         "simplified": "周末",
         "traditional": "週末",
         "pinyin": "zhōumò",
-        "english": "weekend"
+        "english": "weekend",
+        "starred": false
       },
       {
         "id": "c81ba9da-dfd0-4150-b054-02cacf628eea",
         "simplified": "打",
         "traditional": "",
         "pinyin": "dǎ",
-        "english": "to play (ball), to hit"
+        "english": "to play (ball), to hit",
+        "starred": false
       },
       {
         "id": "e590ef6e-dd4c-4d3c-b10a-88f2050301fc",
         "simplified": "网球",
         "traditional": "網球",
         "pinyin": "wǎngqiú",
-        "english": "tennis"
+        "english": "tennis",
+        "starred": false
       },
       {
         "id": "a4422abd-6a84-47af-b705-607a3a34527a",
         "simplified": "听",
         "traditional": "聽",
         "pinyin": "tīng",
-        "english": "to listen"
+        "english": "to listen",
+        "starred": false
       },
       {
         "id": "17bf68db-cc92-47ae-8ed4-4a1985a1e245",
         "simplified": "音乐",
         "traditional": "音樂",
         "pinyin": "yīnyuè",
-        "english": "music"
+        "english": "music",
+        "starred": false
       },
       {
         "id": "c2f2c150-2cd0-4ae0-bc3b-49c001434651",
         "simplified": "和",
         "traditional": "",
         "pinyin": "hàn / hé",
-        "english": "and"
+        "english": "and",
+        "starred": false
       },
       {
         "id": "bb538baf-e867-451f-b70d-98c48629c8e9",
         "simplified": "可是",
         "traditional": "",
         "pinyin": "kěshì",
-        "english": "but, however"
+        "english": "but, however",
+        "starred": false
       },
       {
         "id": "b8e5350f-8f85-4022-9140-5331652491a0",
         "simplified": "还",
         "traditional": "還",
         "pinyin": "hái",
-        "english": "also, in addition"
+        "english": "also, in addition",
+        "starred": false
       },
       {
         "id": "f2589800-c381-4dc3-b6ed-3feea3af09c2",
         "simplified": "看",
         "traditional": "",
         "pinyin": "kàn",
-        "english": "to see, look, watch, read"
+        "english": "to see, look, watch, read",
+        "starred": false
       },
       {
         "id": "668bf091-d553-4d27-b3fa-aed210f49ebf",
         "simplified": "电视",
         "traditional": "電視",
         "pinyin": "diànshì",
-        "english": "television"
+        "english": "television",
+        "starred": false
       },
       {
         "id": "3d09e848-0b6a-4baf-b685-276ce972cbfe",
         "simplified": "晚上",
         "traditional": "",
         "pinyin": "wǎngshàng",
-        "english": "night, at night"
+        "english": "night, at night",
+        "starred": false
       },
       {
         "id": "7cf0cdfb-aba1-4261-ab64-b00085d572d6",
         "simplified": "常常",
         "traditional": "",
         "pinyin": "chángcháng",
-        "english": "often"
+        "english": "often",
+        "starred": false
       },
       {
         "id": "f2e5a930-e759-40f4-b1d7-a6cf7fcc9d2d",
         "simplified": "家",
         "traditional": "",
         "pinyin": "jiā",
-        "english": "house, home, family"
+        "english": "house, home, family",
+        "starred": false
       },
       {
         "id": "abb63438-4c4e-4261-8d79-f61be8831e59",
         "simplified": "跑步",
         "traditional": "",
         "pinyin": "pǎo bù",
-        "english": "to run, to jog"
+        "english": "to run, to jog",
+        "starred": false
       },
       {
         "id": "057870a2-725f-42d5-a700-4af0597ee233",
         "simplified": "唱歌",
         "traditional": "",
         "pinyin": "chàng gē",
-        "english": "to sing"
+        "english": "to sing",
+        "starred": false
       },
       {
         "id": "cb21d9f7-55b4-4c6e-9c31-41661e194b08",
         "simplified": "跳舞",
         "traditional": "",
         "pinyin": "tiào wǔ",
-        "english": "to dance"
+        "english": "to dance",
+        "starred": false
       },
       {
         "id": "8e64c547-0fe6-4adf-a787-a4ffc6dd5384",
         "simplified": "上午",
         "traditional": "",
         "pinyin": "shàngwǔ",
-        "english": "later morning"
+        "english": "later morning",
+        "starred": false
       },
       {
         "id": "08a05b7a-27e0-4255-b6ee-bb12d13fb4a3",
         "simplified": "太太",
         "traditional": "",
         "pinyin": "tàitai",
-        "english": "wife, Mrs."
+        "english": "wife, Mrs.",
+        "starred": false
       }
     ]
   }

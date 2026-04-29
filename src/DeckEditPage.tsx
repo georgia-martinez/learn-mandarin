@@ -31,6 +31,8 @@ export default function DeckEditPage() {
   const [deck, setDeck] = useState<Deck | null>(null)
   const [storageReady, setStorageReady] = useState(false)
   const [studyOpen, setStudyOpen] = useState(false)
+  /** When true, the next session uses only starred cards (dialog opened from "Study starred cards"). */
+  const [studyOnlyStarred, setStudyOnlyStarred] = useState(false)
   const [hoveredGap, setHoveredGap] = useState<number | null>(null)
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
   const [dropIndicatorIndex, setDropIndicatorIndex] = useState<number | null>(null)
@@ -135,7 +137,7 @@ export default function DeckEditPage() {
         ...prev,
         cards: [
           ...prev.cards,
-          { id: crypto.randomUUID(), simplified: '', traditional: '', pinyin: '', english: '' },
+          { id: crypto.randomUUID(), simplified: '', traditional: '', pinyin: '', english: '', starred: false },
         ],
       }
     })
@@ -147,7 +149,7 @@ export default function DeckEditPage() {
       if (!prev) return prev
       const newCards = [...prev.cards]
       newCards.splice(afterIndex + 1, 0, {
-        id: crypto.randomUUID(), simplified: '', traditional: '', pinyin: '', english: '',
+        id: crypto.randomUUID(), simplified: '', traditional: '', pinyin: '', english: '', starred: false,
       })
       return { ...prev, cards: newCards }
     })
@@ -232,6 +234,7 @@ export default function DeckEditPage() {
   if (!storageReady || !deck) return null
 
   const cards: FlashCard[] = deck.cards
+  const starredCount = cards.filter((c) => c.starred).length
   const isDragging = draggingIndex !== null
 
   return (
@@ -262,8 +265,25 @@ export default function DeckEditPage() {
               autoComplete="off"
             />
             <Stack direction="row" spacing={1.5} useFlexGap sx={{ flexWrap: 'wrap', rowGap: 1 }}>
-              <Button variant="outlined" onClick={() => setStudyOpen(true)} disabled={cards.length === 0}>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setStudyOnlyStarred(false)
+                  setStudyOpen(true)
+                }}
+                disabled={cards.length === 0}
+              >
                 Study
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setStudyOnlyStarred(true)
+                  setStudyOpen(true)
+                }}
+                disabled={cards.length === 0 || starredCount === 0}
+              >
+                Study starred cards
               </Button>
             </Stack>
             <StudyConfigDialog
@@ -271,9 +291,22 @@ export default function DeckEditPage() {
               onClose={() => setStudyOpen(false)}
               onStart={(config) => {
                 setStudyOpen(false)
-                void navigate('/study', { state: { ...config, cards, deckId: deck.id } })
+                const studyCards = studyOnlyStarred ? cards.filter((c) => c.starred) : cards
+                void navigate('/study', {
+                  state: {
+                    ...config,
+                    cards: studyCards,
+                    deckId: deck.id,
+                    studyStarredOnly: studyOnlyStarred,
+                  },
+                })
               }}
-              hasCards={cards.length > 0}
+              hasCards={studyOnlyStarred ? starredCount > 0 : cards.length > 0}
+              emptyHint={
+                studyOnlyStarred
+                  ? 'Star at least one card in this deck to study starred cards.'
+                  : undefined
+              }
             />
           </Box>
 
@@ -441,6 +474,7 @@ export default function DeckEditPage() {
                             color="error"
                             aria-label="Delete card"
                             onClick={() => removeCard(card.id)}
+                            onMouseDown={(e) => e.stopPropagation()}
                             edge="end"
                             sx={{ flexShrink: 0, alignSelf: { xs: 'flex-end', lg: 'center' }, mt: { xs: 0, lg: 0.5 } }}
                           >

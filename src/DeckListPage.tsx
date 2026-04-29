@@ -50,7 +50,7 @@ export default function DeckListPage() {
     const deck: Deck = {
       id: crypto.randomUUID(),
       title,
-      cards: [{ id: crypto.randomUUID(), simplified: '', traditional: '', pinyin: '', english: '' }],
+      cards: [{ id: crypto.randomUUID(), simplified: '', traditional: '', pinyin: '', english: '', starred: false }],
     }
     await saveDeck(deck)
     setDecks((prev) => [...prev, deck])

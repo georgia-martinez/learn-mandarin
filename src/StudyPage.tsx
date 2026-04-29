@@ -7,12 +7,16 @@ import Container from '@mui/material/Container'
 import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import Toolbar from '@mui/material/Toolbar'
+import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { keyframes } from '@mui/material/styles'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
+import StarIcon from '@mui/icons-material/Star'
+import StarBorderIcon from '@mui/icons-material/StarBorder'
 import type { FlashCard } from './flashcardStorage'
+import { loadDecks, saveDeck } from './deckStorage'
 import {
   getFieldValue,
   type StudyConfig,
@@ -74,6 +78,8 @@ type DisplayItem = {
 type StudyState = StudyConfig & {
   cards: FlashCard[]
   deckId: string
+  /** Set when navigating from deck editor “Study starred cards”. */
+  studyStarredOnly?: boolean
 }
 
 function fieldLang(f: StudyField): string {
@@ -215,8 +221,14 @@ function isValidStudyState(s: unknown): s is StudyState {
   if (!ok(f) || !ok(b)) return false
   if (!Array.isArray(o.cards)) return false
   if (typeof o.deckId !== 'string') return false
+  if (o.studyStarredOnly !== undefined && typeof o.studyStarredOnly !== 'boolean') {
+    return false
+  }
   return true
 }
+
+/** Bright yellow for starred state (study mode). */
+const STAR_ACTIVE_COLOR = '#FFD600'
 
 export default function StudyPage() {
   const navigate = useNavigate()
@@ -229,21 +241,115 @@ export default function StudyPage() {
   const [cardStep, setCardStep] = useState<'next' | 'prev' | null>(null)
   const state = isValidStudyState(location.state) ? location.state : null
 
+  /** Live card list for this session (full deck or starred subset). */
+  const [studyCards, setStudyCards] = useState<FlashCard[]>(() => state?.cards ?? [])
+  /** Full deck from storage — source for switching between full vs starred study. */
+  const [fullDeckCards, setFullDeckCards] = useState<FlashCard[]>([])
+  /** Starred-only subset session (from button or deck editor). */
+  const [studyStarredOnlyMode, setStudyStarredOnlyMode] = useState(() =>
+    Boolean(state?.studyStarredOnly),
+  )
+
+  const deckId = state?.deckId
+
   useLayoutEffect(() => {
     if (!state) {
       void navigate('/', { replace: true })
     }
   }, [state, navigate])
 
-  const cards = state?.cards ?? []
+  useEffect(() => {
+    if (!deckId) return
+    let cancelled = false
+    void loadDecks().then((decks) => {
+      if (cancelled) return
+      const deck = decks.find((d) => d.id === deckId)
+      if (deck) {
+        setFullDeckCards(deck.cards)
+      }
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [deckId])
+
+  const cards = studyCards
   const n = cards.length
+
+  const hasStarredInFullDeck = fullDeckCards.some((c) => c.starred)
+
+  const persistStarToggle = useCallback(
+    async (cardId: string) => {
+      if (!deckId) return
+      const decks = await loadDecks()
+      const deck = decks.find((d) => d.id === deckId)
+      if (!deck) return
+      await saveDeck({
+        ...deck,
+        cards: deck.cards.map((c) =>
+          c.id === cardId ? { ...c, starred: !c.starred } : c,
+        ),
+      })
+    },
+    [deckId],
+  )
+
+  const toggleStarForCardId = useCallback(
+    (cardId: string) => {
+      setFullDeckCards((prev) =>
+        prev.map((c) => (c.id === cardId ? { ...c, starred: !c.starred } : c)),
+      )
+      setStudyCards((prev) => {
+        const mapped = prev.map((c) =>
+          c.id === cardId ? { ...c, starred: !c.starred } : c,
+        )
+        if (studyStarredOnlyMode) {
+          return mapped.filter((c) => c.starred)
+        }
+        return mapped
+      })
+      void persistStarToggle(cardId)
+    },
+    [persistStarToggle, studyStarredOnlyMode],
+  )
+
+  const enterStarredOnlyStudy = useCallback(() => {
+    const starred = fullDeckCards.filter((c) => c.starred)
+    if (starred.length === 0) return
+    setStudyCards(starred)
+    setStudyStarredOnlyMode(true)
+    setIndex(0)
+    setIsFlipped(false)
+    setSlideKey((k) => k + 1)
+  }, [fullDeckCards])
+
+  const backToFullDeckStudy = useCallback(() => {
+    setStudyCards([...fullDeckCards])
+    setStudyStarredOnlyMode(false)
+    setIndex(0)
+    setIsFlipped(false)
+    setSlideKey((k) => k + 1)
+  }, [fullDeckCards])
+
+  const clampedIndex = n === 0 ? 0 : Math.min(index, n - 1)
+
+  const toggleCurrentStar = useCallback(() => {
+    if (n === 0) return
+    const ci = Math.min(index, n - 1)
+    const cardId = cards[ci]?.id
+    if (!cardId) return
+    toggleStarForCardId(cardId)
+  }, [n, cards, index, toggleStarForCardId])
 
   const go = useCallback(
     (delta: number) => {
       if (n === 0) return
       setCardStep(delta > 0 ? 'next' : 'prev')
       setSlideKey((k) => k + 1)
-      setIndex((i) => (i + delta + n) % n)
+      setIndex((i) => {
+        const cur = Math.min(i, n - 1)
+        return (cur + delta + n) % n
+      })
       setIsFlipped(false)
     },
     [n],
@@ -254,6 +360,11 @@ export default function StudyPage() {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement
       if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable) {
+        return
+      }
+      if ((e.key === 's' || e.key === 'S') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault()
+        toggleCurrentStar()
         return
       }
       if (e.code === 'Space') {
@@ -273,15 +384,17 @@ export default function StudyPage() {
     }
     window.addEventListener('keydown', onKey, { capture: true })
     return () => window.removeEventListener('keydown', onKey, { capture: true })
-  }, [state, n, go])
+  }, [state, n, go, toggleCurrentStar])
 
   if (!state) {
     return null
   }
 
   const backPath = state.deckId ? `/deck/${state.deckId}` : '/'
-  const current = cards[index]
+  const current = cards[clampedIndex]
   const showEmpty = n === 0
+
+  const starred = current?.starred ?? false
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -291,7 +404,7 @@ export default function StudyPage() {
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Study
+            {studyStarredOnlyMode ? 'Study · Starred terms' : 'Study'}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -308,17 +421,57 @@ export default function StudyPage() {
         }}
       >
         {showEmpty ? (
-          <Stack spacing={2} sx={{ alignItems: 'center' }}>
-            <Typography>No cards to study. Add cards in the list and try again.</Typography>
-            <Button variant="outlined" onClick={() => void navigate(backPath)}>
-              Back to deck
-            </Button>
+          <Stack spacing={2} sx={{ alignItems: 'center', textAlign: 'center' }}>
+            {studyStarredOnlyMode ? (
+              <>
+                <Typography>No starred cards left.</Typography>
+                <Button variant="contained" onClick={backToFullDeckStudy}>
+                  Back to full deck
+                </Button>
+              </>
+            ) : (
+              <>
+                <Typography>No cards to study. Add cards in the list and try again.</Typography>
+                <Button variant="outlined" onClick={() => void navigate(backPath)}>
+                  Back to deck
+                </Button>
+              </>
+            )}
           </Stack>
         ) : (
-          <>
+          <Stack spacing={2} sx={{ width: '100%', maxWidth: 480 }}>
+            {/* Fixed-height strip so showing/hiding the button does not shift the card. */}
+            <Box
+              sx={{
+                height: 40,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                flexWrap: 'wrap',
+                flexShrink: 0,
+              }}
+            >
+              {studyStarredOnlyMode ? (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<ArrowBackIcon />}
+                  onClick={backToFullDeckStudy}
+                >
+                  Back to full deck
+                </Button>
+              ) : hasStarredInFullDeck ? (
+                <Button variant="outlined" size="small" onClick={enterStarredOnlyStudy}>
+                  Study starred terms
+                </Button>
+              ) : (
+                <Box component="span" aria-hidden sx={{ display: 'block', height: 36 }} />
+              )}
+            </Box>
             <Box
               key={slideKey}
               sx={{
+                position: 'relative',
                 width: '100%',
                 maxWidth: 480,
                 perspective: '1200px',
@@ -332,6 +485,27 @@ export default function StudyPage() {
                   : {}),
               }}
             >
+              <Tooltip title={starred ? 'Unstar card (S)' : 'Star card (S)'}>
+                <IconButton
+                  aria-label={starred ? 'Unstar card' : 'Star card'}
+                  aria-pressed={starred}
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    toggleStarForCardId(current.id)
+                  }}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  sx={{
+                    position: 'absolute',
+                    top: 6,
+                    right: 6,
+                    zIndex: 10,
+                    color: starred ? STAR_ACTIVE_COLOR : 'action.disabled',
+                  }}
+                >
+                  {starred ? <StarIcon /> : <StarBorderIcon />}
+                </IconButton>
+              </Tooltip>
               <Box
                 onClick={() => setIsFlipped((f) => !f)}
                 role="button"
@@ -385,18 +559,22 @@ export default function StudyPage() {
                 </Box>
               </Box>
             </Box>
-            <Stack direction="row" spacing={2} sx={{ mt: 2, alignItems: 'center' }}>
+            <Stack
+              direction="row"
+              spacing={2}
+              sx={{ alignItems: 'center', justifyContent: 'center', width: '100%' }}
+            >
               <IconButton onClick={() => go(-1)} aria-label="Previous card">
                 <ArrowBackIosNewIcon />
               </IconButton>
               <Typography variant="body2" color="text.secondary" aria-live="polite">
-                {index + 1} / {n}
+                {clampedIndex + 1} / {n}
               </Typography>
               <IconButton onClick={() => go(1)} aria-label="Next card">
                 <ArrowForwardIosIcon />
               </IconButton>
             </Stack>
-          </>
+          </Stack>
         )}
       </Container>
     </Box>
