@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
+import confetti from 'canvas-confetti'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
@@ -14,6 +15,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import StarIcon from '@mui/icons-material/Star'
+import ShuffleIcon from '@mui/icons-material/Shuffle'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
 import type { FlashCard } from './flashcardStorage'
 import { loadDecks, saveDeck } from './deckStorage'
@@ -230,6 +232,17 @@ function isValidStudyState(s: unknown): s is StudyState {
 /** Bright yellow for starred state (study mode). */
 const STAR_ACTIVE_COLOR = '#FFD600'
 
+function shuffleCards<T>(items: T[]): T[] {
+  const copy = [...items]
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const t = copy[i]!
+    copy[i] = copy[j]!
+    copy[j] = t
+  }
+  return copy
+}
+
 export default function StudyPage() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -249,8 +262,16 @@ export default function StudyPage() {
   const [studyStarredOnlyMode, setStudyStarredOnlyMode] = useState(() =>
     Boolean(state?.studyStarredOnly),
   )
+  const [shuffleEnabled, setShuffleEnabled] = useState(false)
+  /** Finished reviewing past the last card — congrats + navigation exits without returning here on back. */
+  const [sessionComplete, setSessionComplete] = useState(false)
+  const sessionCompleteRef = useRef(false)
 
   const deckId = state?.deckId
+
+  useEffect(() => {
+    sessionCompleteRef.current = sessionComplete
+  }, [sessionComplete])
 
   useLayoutEffect(() => {
     if (!state) {
@@ -277,6 +298,7 @@ export default function StudyPage() {
   const n = cards.length
 
   const hasStarredInFullDeck = fullDeckCards.some((c) => c.starred)
+  const starredCountInDeck = fullDeckCards.filter((c) => c.starred).length
 
   const persistStarToggle = useCallback(
     async (cardId: string) => {
@@ -313,9 +335,33 @@ export default function StudyPage() {
     [persistStarToggle, studyStarredOnlyMode],
   )
 
+  const rebuildCanonicalStudyCards = useCallback((): FlashCard[] => {
+    if (studyStarredOnlyMode) {
+      return fullDeckCards.filter((c) => c.starred)
+    }
+    return [...fullDeckCards]
+  }, [fullDeckCards, studyStarredOnlyMode])
+
+  const toggleShuffle = useCallback(() => {
+    setSessionComplete(false)
+    setShuffleEnabled((wasOn) => {
+      if (!wasOn) {
+        setStudyCards((cards) => shuffleCards(cards))
+      } else {
+        setStudyCards(rebuildCanonicalStudyCards())
+      }
+      return !wasOn
+    })
+    setIndex(0)
+    setIsFlipped(false)
+    setSlideKey((k) => k + 1)
+  }, [rebuildCanonicalStudyCards])
+
   const enterStarredOnlyStudy = useCallback(() => {
     const starred = fullDeckCards.filter((c) => c.starred)
     if (starred.length === 0) return
+    setSessionComplete(false)
+    setShuffleEnabled(false)
     setStudyCards(starred)
     setStudyStarredOnlyMode(true)
     setIndex(0)
@@ -324,6 +370,8 @@ export default function StudyPage() {
   }, [fullDeckCards])
 
   const backToFullDeckStudy = useCallback(() => {
+    setSessionComplete(false)
+    setShuffleEnabled(false)
     setStudyCards([...fullDeckCards])
     setStudyStarredOnlyMode(false)
     setIndex(0)
@@ -331,29 +379,54 @@ export default function StudyPage() {
     setSlideKey((k) => k + 1)
   }, [fullDeckCards])
 
+  const studyAgain = useCallback(() => {
+    setSessionComplete(false)
+    setIndex(0)
+    setIsFlipped(false)
+    setSlideKey((k) => k + 1)
+  }, [])
+
   const clampedIndex = n === 0 ? 0 : Math.min(index, n - 1)
 
   const toggleCurrentStar = useCallback(() => {
-    if (n === 0) return
+    if (sessionCompleteRef.current || n === 0) return
     const ci = Math.min(index, n - 1)
     const cardId = cards[ci]?.id
     if (!cardId) return
     toggleStarForCardId(cardId)
   }, [n, cards, index, toggleStarForCardId])
 
-  const go = useCallback(
-    (delta: number) => {
-      if (n === 0) return
-      setCardStep(delta > 0 ? 'next' : 'prev')
-      setSlideKey((k) => k + 1)
-      setIndex((i) => {
-        const cur = Math.min(i, n - 1)
-        return (cur + delta + n) % n
-      })
-      setIsFlipped(false)
-    },
-    [n],
-  )
+  const go = useCallback((delta: number) => {
+    if (n === 0) return
+    setCardStep(delta > 0 ? 'next' : 'prev')
+    setSlideKey((k) => k + 1)
+    setIsFlipped(false)
+
+    if (sessionCompleteRef.current) {
+      setSessionComplete(false)
+      setIndex(delta > 0 ? 0 : n - 1)
+      return
+    }
+
+    setIndex((i) => {
+      const cur = Math.min(i, n - 1)
+      if (delta > 0 && cur === n - 1) {
+        setSessionComplete(true)
+        return cur
+      }
+      return (cur + delta + n) % n
+    })
+  }, [n])
+
+  useEffect(() => {
+    if (!sessionComplete) return
+    void confetti({
+      particleCount: 140,
+      spread: 72,
+      origin: { y: 0.62 },
+      scalar: 1,
+    })
+  }, [sessionComplete])
 
   useEffect(() => {
     if (!state || n === 0) return
@@ -368,6 +441,7 @@ export default function StudyPage() {
         return
       }
       if (e.code === 'Space') {
+        if (sessionCompleteRef.current) return
         e.preventDefault()
         setIsFlipped((f) => !f)
         return
@@ -394,7 +468,7 @@ export default function StudyPage() {
   const current = cards[clampedIndex]
   const showEmpty = n === 0
 
-  const starred = current?.starred ?? false
+  const starred = sessionComplete ? false : (current?.starred ?? false)
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -446,27 +520,58 @@ export default function StudyPage() {
                 height: 40,
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'flex-start',
-                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                gap: 1,
                 flexShrink: 0,
               }}
             >
-              {studyStarredOnlyMode ? (
-                <Button
-                  variant="outlined"
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  minHeight: 36,
+                  flex: 1,
+                  minWidth: 0,
+                  flexWrap: 'wrap',
+                }}
+              >
+                {studyStarredOnlyMode ? (
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    startIcon={<ArrowBackIcon />}
+                    onClick={backToFullDeckStudy}
+                  >
+                    Back to full deck
+                  </Button>
+                ) : hasStarredInFullDeck ? (
+                  <Button variant="outlined" size="small" onClick={enterStarredOnlyStudy}>
+                    Study starred terms
+                  </Button>
+                ) : (
+                  <Box component="span" aria-hidden sx={{ display: 'block', height: 36 }} />
+                )}
+              </Box>
+              <Tooltip title={shuffleEnabled ? 'Unshuffle cards' : 'Shuffle cards'}>
+                <IconButton
                   size="small"
-                  startIcon={<ArrowBackIcon />}
-                  onClick={backToFullDeckStudy}
+                  onClick={toggleShuffle}
+                  aria-label={shuffleEnabled ? 'Turn off shuffle' : 'Shuffle cards'}
+                  aria-pressed={shuffleEnabled}
+                  sx={{
+                    flexShrink: 0,
+                    ...(shuffleEnabled
+                      ? {
+                          bgcolor: 'error.main',
+                          color: 'error.contrastText',
+                          '&:hover': { bgcolor: 'error.dark' },
+                        }
+                      : { color: 'text.secondary' }),
+                  }}
                 >
-                  Back to full deck
-                </Button>
-              ) : hasStarredInFullDeck ? (
-                <Button variant="outlined" size="small" onClick={enterStarredOnlyStudy}>
-                  Study starred terms
-                </Button>
-              ) : (
-                <Box component="span" aria-hidden sx={{ display: 'block', height: 36 }} />
-              )}
+                  <ShuffleIcon />
+                </IconButton>
+              </Tooltip>
             </Box>
             <Box
               key={slideKey}
@@ -478,86 +583,121 @@ export default function StudyPage() {
                 transformStyle: 'preserve-3d',
                 overflow: 'hidden',
                 borderRadius: 1,
-                ...(cardStep != null && slideKey > 0
+                ...(cardStep != null && slideKey > 0 && !sessionComplete
                   ? {
                       animation: `${cardStep === 'next' ? slideInNext : slideInPrev} 0.32s ease-out both`,
                     }
                   : {}),
               }}
             >
-              <Tooltip title={starred ? 'Unstar card (S)' : 'Star card (S)'}>
-                <IconButton
-                  aria-label={starred ? 'Unstar card' : 'Star card'}
-                  aria-pressed={starred}
-                  size="small"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    toggleStarForCardId(current.id)
-                  }}
-                  onMouseDown={(e) => e.stopPropagation()}
+              {sessionComplete ? (
+                <Stack
+                  spacing={2}
                   sx={{
-                    position: 'absolute',
-                    top: 6,
-                    right: 6,
-                    zIndex: 10,
-                    color: starred ? STAR_ACTIVE_COLOR : 'action.disabled',
-                  }}
-                >
-                  {starred ? <StarIcon /> : <StarBorderIcon />}
-                </IconButton>
-              </Tooltip>
-              <Box
-                onClick={() => setIsFlipped((f) => !f)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault()
-                    setIsFlipped((f) => !f)
-                  }
-                }}
-                aria-label={isFlipped ? 'Show front' : 'Show back'}
-                sx={{
-                  width: '100%',
-                  maxWidth: 480,
-                  perspective: '1000px',
-                  cursor: 'pointer',
-                  outline: 'none',
-                  mx: 'auto',
-                  '&:focus-visible': { boxShadow: (t) => `0 0 0 2px ${t.palette.primary.main}` },
-                }}
-              >
-                <Box
-                  sx={{
-                    position: 'relative',
                     width: '100%',
-                    minHeight: 280,
-                    transformStyle: 'preserve-3d',
-                    transition: 'transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)',
-                    transform: isFlipped ? 'rotateX(180deg)' : 'rotateX(0deg)',
-                    transformOrigin: 'center center',
+                    alignItems: 'center',
+                    py: 2,
+                    px: 1,
+                    textAlign: 'center',
                   }}
                 >
+                  <Stack spacing={1} sx={{ alignItems: 'center', width: '100%' }}>
+                    <Typography variant="h5" sx={{ fontWeight: 700, color: 'text.primary' }}>
+                      Nice job!
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary">
+                      You studied {n} {n === 1 ? 'card' : 'cards'}
+                    </Typography>
+                    {starredCountInDeck > 0 ? (
+                      <Typography variant="body1" color="text.secondary">
+                        and have {starredCountInDeck}{' '}
+                        {starredCountInDeck === 1 ? 'starred card' : 'starred cards'}
+                      </Typography>
+                    ) : null}
+                  </Stack>
+                  <Box sx={{ pt: 0.5 }}>
+                    <Button variant="contained" size="medium" onClick={studyAgain}>
+                      Study Again
+                    </Button>
+                  </Box>
+                </Stack>
+              ) : (
+                <>
+                  <Tooltip title={starred ? 'Unstar card (S)' : 'Star card (S)'}>
+                    <IconButton
+                      aria-label={starred ? 'Unstar card' : 'Star card'}
+                      aria-pressed={starred}
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        toggleStarForCardId(current!.id)
+                      }}
+                      onMouseDown={(e) => e.stopPropagation()}
+                      sx={{
+                        position: 'absolute',
+                        top: 6,
+                        right: 6,
+                        zIndex: 10,
+                        color: starred ? STAR_ACTIVE_COLOR : 'action.disabled',
+                      }}
+                    >
+                      {starred ? <StarIcon /> : <StarBorderIcon />}
+                    </IconButton>
+                  </Tooltip>
                   <Box
+                    onClick={() => setIsFlipped((f) => !f)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        setIsFlipped((f) => !f)
+                      }
+                    }}
+                    aria-label={isFlipped ? 'Show front' : 'Show back'}
                     sx={{
-                      ...faceBase,
-                      transform: 'rotateX(0deg)',
-                      zIndex: 2,
+                      width: '100%',
+                      maxWidth: 480,
+                      perspective: '1000px',
+                      cursor: 'pointer',
+                      outline: 'none',
+                      mx: 'auto',
+                      '&:focus-visible': { boxShadow: (t) => `0 0 0 2px ${t.palette.primary.main}` },
                     }}
                   >
-                    {renderFaceContent(current, state.front, 'front')}
+                    <Box
+                      sx={{
+                        position: 'relative',
+                        width: '100%',
+                        minHeight: 280,
+                        transformStyle: 'preserve-3d',
+                        transition: 'transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)',
+                        transform: isFlipped ? 'rotateX(180deg)' : 'rotateX(0deg)',
+                        transformOrigin: 'center center',
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          ...faceBase,
+                          transform: 'rotateX(0deg)',
+                          zIndex: 2,
+                        }}
+                      >
+                        {renderFaceContent(current!, state.front, 'front')}
+                      </Box>
+                      <Box
+                        sx={{
+                          ...faceBase,
+                          transform: 'rotateX(180deg)',
+                          zIndex: 1,
+                        }}
+                      >
+                        {renderFaceContent(current!, state.back, 'back')}
+                      </Box>
+                    </Box>
                   </Box>
-                  <Box
-                    sx={{
-                      ...faceBase,
-                      transform: 'rotateX(180deg)',
-                      zIndex: 1,
-                    }}
-                  >
-                    {renderFaceContent(current, state.back, 'back')}
-                  </Box>
-                </Box>
-              </Box>
+                </>
+              )}
             </Box>
             <Stack
               direction="row"
@@ -568,7 +708,7 @@ export default function StudyPage() {
                 <ArrowBackIosNewIcon />
               </IconButton>
               <Typography variant="body2" color="text.secondary" aria-live="polite">
-                {clampedIndex + 1} / {n}
+                {sessionComplete ? 'Done' : `${clampedIndex + 1} / ${n}`}
               </Typography>
               <IconButton onClick={() => go(1)} aria-label="Next card">
                 <ArrowForwardIosIcon />
