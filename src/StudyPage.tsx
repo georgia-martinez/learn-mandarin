@@ -100,18 +100,31 @@ function buildDisplayItems(card: FlashCard, fields: StudyField[]): DisplayItem[]
         mergedHanziEmitted = true
         const simp = getFieldValue(card, 'simplified').trim()
         const trad = getFieldValue(card, 'traditional').trim()
-        const primary = simp || trad || '—'
-        const showSecondLine = Boolean(simp && trad && trad !== simp)
-        const primaryLang = simp ? 'zh-Hans' : trad ? 'zh-Hant' : 'zh-Hans'
-        out.push({
-          key: 'simplified-traditional',
-          label: 'Simplified / Traditional',
-          value: primary,
-          lang: primaryLang,
-          secondLine: showSecondLine ? trad : undefined,
-          secondLineLang: showSecondLine ? 'zh-Hant' : undefined,
-          alwaysShowLabel: true,
-        })
+        const areSame = !simp || !trad || simp === trad
+        if (areSame) {
+          // Same or one missing — show as a single merged item
+          out.push({
+            key: 'simplified-traditional',
+            label: 'Simplified / Traditional',
+            value: simp || trad || '—',
+            lang: simp ? 'zh-Hans' : 'zh-Hant',
+            alwaysShowLabel: true,
+          })
+        } else {
+          // Different — show each with its own label
+          out.push({
+            key: 'simplified',
+            label: STUDY_FIELD_LABELS.simplified,
+            value: simp,
+            lang: 'zh-Hans',
+          })
+          out.push({
+            key: 'traditional',
+            label: STUDY_FIELD_LABELS.traditional,
+            value: trad,
+            lang: 'zh-Hant',
+          })
+        }
       }
       continue
     }

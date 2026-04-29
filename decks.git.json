@@ -100,6 +100,13 @@
         "traditional": "",
         "pinyin": "tā",
         "english": "her"
+      },
+      {
+        "id": "c487f53f-9315-4a09-baf6-3e896ca7cc63",
+        "simplified": "",
+        "traditional": "",
+        "pinyin": "",
+        "english": ""
       }
     ]
   },
@@ -190,6 +197,576 @@
         "traditional": "",
         "pinyin": "zhì",
         "english": "only"
+      }
+    ]
+  },
+  {
+    "id": "e0bad445-6588-4391-bd03-b469eea6c593",
+    "title": "Lesson 3",
+    "cards": [
+      {
+        "id": "f3417fd6-e0ea-4ac0-ad0f-c52f292835a5",
+        "simplified": "不",
+        "traditional": "",
+        "pinyin": "bú / bù",
+        "english": "not"
+      },
+      {
+        "id": "f54416b6-1d2d-4655-be69-29f7f16a2353",
+        "simplified": "学生",
+        "traditional": "學生",
+        "pinyin": "xuéshēng",
+        "english": "student"
+      },
+      {
+        "id": "2dd89435-46d4-43d0-9562-f8f209c18b14",
+        "simplified": "大学",
+        "traditional": "大學",
+        "pinyin": "dàxué",
+        "english": "university / college"
+      },
+      {
+        "id": "bd5c8aac-9590-4fa4-84d2-0e6a1c923acc",
+        "simplified": "在",
+        "traditional": "",
+        "pinyin": "zài",
+        "english": "in, on, at"
+      },
+      {
+        "id": "b8689e68-4c27-4bc5-81ac-1c0aab6fbb9f",
+        "simplified": "哪兒",
+        "traditional": "哪裡",
+        "pinyin": "nǎlǐ / nǎr",
+        "english": "where"
+      },
+      {
+        "id": "9acf1864-eee9-40ac-943a-b7ee9cc5b45f",
+        "simplified": "工作",
+        "traditional": "",
+        "pinyin": "gōngzuò",
+        "english": "to work, work"
+      },
+      {
+        "id": "2fae0ed5-b00f-492b-9065-8dce94072fea",
+        "simplified": "银行",
+        "traditional": "銀行",
+        "pinyin": "yínháng",
+        "english": "bank"
+      },
+      {
+        "id": "7689cec0-20a8-45fb-9414-fa993893d9e8",
+        "simplified": "丈夫",
+        "traditional": "",
+        "pinyin": "xiānshēng",
+        "english": "husband, Mr."
+      },
+      {
+        "id": "72e89bf5-941c-4eca-a7db-1a8ce7adc8d8",
+        "simplified": "电脑",
+        "traditional": "電腦",
+        "pinyin": "diànnǎo",
+        "english": "computer"
+      },
+      {
+        "id": "0f1add89-002c-4a79-82d1-cca1d04ff50d",
+        "simplified": "公司",
+        "traditional": "",
+        "pinyin": "gōngsī",
+        "english": "company"
+      },
+      {
+        "id": "a79abbc3-ccf0-4ae2-ab1d-444b806d09b8",
+        "simplified": "孩子",
+        "traditional": "",
+        "pinyin": "háizi",
+        "english": "child "
+      },
+      {
+        "id": "9ada38a8-9090-4d83-88b4-7abb71a4da46",
+        "simplified": "小孩",
+        "traditional": "",
+        "pinyin": "xiǎohái",
+        "english": "child"
+      },
+      {
+        "id": "c98b5a71-4dd3-42f3-ab48-6f53e19a8ed8",
+        "simplified": "儿子",
+        "traditional": "兒子",
+        "pinyin": "érzi",
+        "english": "son"
+      },
+      {
+        "id": "dfe8903f-41a6-4244-803f-9066523fca1b",
+        "simplified": "女儿",
+        "traditional": "女兒",
+        "pinyin": "nǚ'ér",
+        "english": "daughter"
+      },
+      {
+        "id": "b2bb6466-41d7-4c30-87e4-08df8f323f1f",
+        "simplified": "都",
+        "traditional": "",
+        "pinyin": "dōu",
+        "english": "both, all"
+      },
+      {
+        "id": "c24a1fe6-605f-4e14-a678-5a01456d96f3",
+        "simplified": "小学",
+        "traditional": "小學",
+        "pinyin": "xiǎoxué",
+        "english": "elementary school"
+      },
+      {
+        "id": "797b7713-7204-4be7-a388-64c1a002643b",
+        "simplified": "毕业了 ",
+        "traditional": "畢業了 ",
+        "pinyin": "bìyè le",
+        "english": "graduated"
+      },
+      {
+        "id": "edb24938-5579-46cf-b8ea-20d9afe44862",
+        "simplified": "已婚了",
+        "traditional": "",
+        "pinyin": "jiéhūn le",
+        "english": ""
+      },
+      {
+        "id": "04ab9b66-2f1e-47ed-b669-10f0f8f41baa",
+        "simplified": "他们",
+        "traditional": "他們",
+        "pinyin": "tāmen",
+        "english": "they"
+      },
+      {
+        "id": "484fa58d-2647-410e-8583-7296a49c3539",
+        "simplified": "念书",
+        "traditional": "念書",
+        "pinyin": "niàn shū",
+        "english": "to study"
+      },
+      {
+        "id": "612956cc-eeff-42b9-8cbb-c0917fbdb361",
+        "simplified": "法国",
+        "traditional": "法國",
+        "pinyin": "Fǎguó",
+        "english": "France"
+      },
+      {
+        "id": "98d459fd-7029-42c0-8994-4a66a432f96a",
+        "simplified": "和",
+        "traditional": "",
+        "pinyin": "hàn / hé",
+        "english": "and"
+      }
+    ]
+  },
+  {
+    "id": "611dd5a8-bc10-432b-8acd-471575137795",
+    "title": "Lesson 4",
+    "cards": [
+      {
+        "id": "fb10d96a-7309-4300-8ee0-1c903867f1aa",
+        "simplified": "爸爸",
+        "traditional": "",
+        "pinyin": "bàba",
+        "english": "dad"
+      },
+      {
+        "id": "f5ac46b3-49bc-4bf5-af6d-d380a6703352",
+        "simplified": "妈妈",
+        "traditional": "媽媽",
+        "pinyin": "māma",
+        "english": "mom"
+      },
+      {
+        "id": "bc19d151-f6a2-4e8a-888c-40cf0fce2c53",
+        "simplified": "老师",
+        "traditional": "老師",
+        "pinyin": "lǎoshī",
+        "english": "teacher"
+      },
+      {
+        "id": "0040e5ad-5219-405b-bf13-5902516a4bdf",
+        "simplified": "忙",
+        "traditional": "",
+        "pinyin": "máng",
+        "english": "busy"
+      },
+      {
+        "id": "032e3a1e-54b9-4ae1-a801-dd467c863408",
+        "simplified": "很",
+        "traditional": "",
+        "pinyin": "hěn",
+        "english": "very"
+      },
+      {
+        "id": "1340c22f-8948-4834-8344-0442871956ec",
+        "simplified": "每天",
+        "traditional": "",
+        "pinyin": "měitiān",
+        "english": "every day"
+      },
+      {
+        "id": "3dc9595a-4bc1-4ad8-9123-e2562ca972b4",
+        "simplified": "累",
+        "traditional": "",
+        "pinyin": "lèi",
+        "english": "tired"
+      },
+      {
+        "id": "bef59b20-bd82-48ec-ae60-8c40301df08d",
+        "simplified": "",
+        "traditional": "喜歡",
+        "pinyin": "xǐhuān",
+        "english": "to like"
+      },
+      {
+        "id": "e64a6d7a-136e-4bff-b875-9b5d5b9ed044",
+        "simplified": "小孩子",
+        "traditional": "",
+        "pinyin": "xiǎo háizi",
+        "english": "children"
+      },
+      {
+        "id": "621359ed-aaba-4ea8-acca-79be02815378",
+        "simplified": "说",
+        "traditional": "說",
+        "pinyin": "shuō",
+        "english": "to say"
+      },
+      {
+        "id": "3768ae7f-a8b6-4cff-9e7e-ea3ed97d180b",
+        "simplified": "教",
+        "traditional": "",
+        "pinyin": "jiāo",
+        "english": "to teach"
+      },
+      {
+        "id": "7cf1bb25-73f1-4bd4-b7d3-0a6d78edf881",
+        "simplified": "法文",
+        "traditional": "",
+        "pinyin": "Fǎwén",
+        "english": "French language"
+      },
+      {
+        "id": "092554fb-fd3d-4a6c-a554-9d2ce9479060",
+        "simplified": "教书",
+        "traditional": "教書",
+        "pinyin": "jiāo shū",
+        "english": "the job of teaching"
+      },
+      {
+        "id": "2ac2aad1-ce58-407e-b60a-21a4fa94976e",
+        "simplified": "今天",
+        "traditional": "",
+        "pinyin": "jīntiān",
+        "english": "today"
+      }
+    ]
+  },
+  {
+    "id": "266e8525-06e7-4d38-b194-09b303c24a51",
+    "title": "Lesson 5",
+    "cards": [
+      {
+        "id": "0c366794-b093-441e-8bfa-374c571839dd",
+        "simplified": "这",
+        "traditional": "這",
+        "pinyin": "zhè",
+        "english": "this"
+      },
+      {
+        "id": "d297ff6f-9657-4a2b-9b1b-ad8589c629d8",
+        "simplified": "朋友",
+        "traditional": "",
+        "pinyin": "péngyǒu",
+        "english": "friend"
+      },
+      {
+        "id": "a6635779-f09e-4534-86eb-0c6341515171",
+        "simplified": "认识",
+        "traditional": "認識",
+        "pinyin": "rènshì",
+        "english": "to know, meet, recognize"
+      },
+      {
+        "id": "4cd5bdb4-9e47-4214-8a5c-f89e196eae94",
+        "simplified": "高兴",
+        "traditional": "高興",
+        "pinyin": "gāòxìng",
+        "english": ""
+      },
+      {
+        "id": "c81235f5-d25d-4131-b273-03cc71931278",
+        "simplified": "平常",
+        "traditional": "",
+        "pinyin": "píngcháng",
+        "english": "usually, normally"
+      },
+      {
+        "id": "ebe58afd-b1f8-49f0-91d1-d8c6adba6527",
+        "simplified": "住在",
+        "traditional": "",
+        "pinyin": "zhù zài",
+        "english": "to live in / at"
+      },
+      {
+        "id": "fb5c6f80-08d5-4aa1-82e4-fba70909e429",
+        "simplified": "现在",
+        "traditional": "現在",
+        "pinyin": "xiànzài",
+        "english": "now"
+      },
+      {
+        "id": "3da5325a-7f32-485d-a6d7-42c1943afb2c",
+        "simplified": "学校",
+        "traditional": "學校",
+        "pinyin": "xuéxiào",
+        "english": "school"
+      },
+      {
+        "id": "1a163896-d446-4c96-beb1-dfe436dcb115",
+        "simplified": "放假",
+        "traditional": "",
+        "pinyin": "fàngjià",
+        "english": "to be on school break, to be on vacation"
+      },
+      {
+        "id": "a7747ad3-edc4-408c-9b33-86156cf10807",
+        "simplified": "来",
+        "traditional": "來",
+        "pinyin": "lái",
+        "english": "to come"
+      },
+      {
+        "id": "2a79ed99-1161-4afc-aa69-2f9862360e40",
+        "simplified": "玩",
+        "traditional": "",
+        "pinyin": "wán",
+        "english": "to have fun, to play"
+      },
+      {
+        "id": "930b99b0-8ea4-4151-a3bc-2e94bdf052a0",
+        "simplified": "欢迎",
+        "traditional": "歡迎",
+        "pinyin": "huānyíng",
+        "english": "to welcome"
+      },
+      {
+        "id": "520ac9b5-7208-451d-8153-3593274fc2c8",
+        "simplified": "想",
+        "traditional": "",
+        "pinyin": "xiǎng",
+        "english": "would like, to want, to have a desire to"
+      },
+      {
+        "id": "6e62e016-847f-4adb-8541-bf4ec0e3688f",
+        "simplified": "去",
+        "traditional": "",
+        "pinyin": "qù",
+        "english": "to go"
+      },
+      {
+        "id": "b6b7e3cd-dac1-4bcf-895d-a010daaccd70",
+        "simplified": "国家",
+        "traditional": "國家",
+        "pinyin": "guójiǎ",
+        "english": "nation, country"
+      },
+      {
+        "id": "4dc08c82-afeb-4873-a0ab-08b192f5f8ec",
+        "simplified": "公园",
+        "traditional": "公園",
+        "pinyin": "gōngyuán",
+        "english": "park"
+      },
+      {
+        "id": "193255b0-7840-4f9e-b8f1-7e9c3bd8f93f",
+        "simplified": "好久不见",
+        "traditional": "好久不見",
+        "pinyin": "hǎojiǔ bújiàn",
+        "english": "long time no see"
+      },
+      {
+        "id": "cb037033-e87e-4ca1-9d20-ac49339d0b22",
+        "simplified": "迪士尼乐园",
+        "traditional": "迪士尼樂園",
+        "pinyin": "Díshìní lèyuán",
+        "english": "Disneyland"
+      },
+      {
+        "id": "b9956d27-eb38-416c-a08a-356fa8b717ea",
+        "simplified": "台北",
+        "traditional": "臺北",
+        "pinyin": "Táiběi",
+        "english": "Taipei"
+      },
+      {
+        "id": "dbd9aae4-c535-4158-86ba-5ad9b7ce3b6d",
+        "simplified": "加州",
+        "traditional": "",
+        "pinyin": "Jiāzhōu",
+        "english": "California"
+      },
+      {
+        "id": "9a55723e-4a26-4684-b302-7a05f483eed6",
+        "simplified": "谁",
+        "traditional": "誰",
+        "pinyin": "shéi",
+        "english": "who, whom"
+      },
+      {
+        "id": "c6db5d2f-d496-4849-a1e3-641ab60e232c",
+        "simplified": "父母",
+        "traditional": "",
+        "pinyin": "fùmǔ",
+        "english": "parents in a formal way"
+      }
+    ]
+  },
+  {
+    "id": "3e5872bb-19d1-4fae-b87f-87272f95aa11",
+    "title": "Lesson 6",
+    "cards": [
+      {
+        "id": "83a49a91-a458-41fb-8ec0-4c8c5a69cb32",
+        "simplified": "运动",
+        "traditional": "運動",
+        "pinyin": "yùndòng",
+        "english": "to exercise"
+      },
+      {
+        "id": "e1f3589d-ef3e-4124-a29f-47634447372a",
+        "simplified": "做",
+        "traditional": "",
+        "pinyin": "zuò",
+        "english": "to do"
+      },
+      {
+        "id": "a7c01009-8af6-439c-bfd3-8bc63c67df9d",
+        "simplified": "周末",
+        "traditional": "週末",
+        "pinyin": "zhōumò",
+        "english": "weekend"
+      },
+      {
+        "id": "c81ba9da-dfd0-4150-b054-02cacf628eea",
+        "simplified": "打",
+        "traditional": "",
+        "pinyin": "dǎ",
+        "english": "to play (ball), to hit"
+      },
+      {
+        "id": "e590ef6e-dd4c-4d3c-b10a-88f2050301fc",
+        "simplified": "网球",
+        "traditional": "網球",
+        "pinyin": "wǎngqiú",
+        "english": "tennis"
+      },
+      {
+        "id": "a4422abd-6a84-47af-b705-607a3a34527a",
+        "simplified": "听",
+        "traditional": "聽",
+        "pinyin": "tīng",
+        "english": "to listen"
+      },
+      {
+        "id": "17bf68db-cc92-47ae-8ed4-4a1985a1e245",
+        "simplified": "音乐",
+        "traditional": "音樂",
+        "pinyin": "yīnyuè",
+        "english": "music"
+      },
+      {
+        "id": "c2f2c150-2cd0-4ae0-bc3b-49c001434651",
+        "simplified": "和",
+        "traditional": "",
+        "pinyin": "hàn / hé",
+        "english": "and"
+      },
+      {
+        "id": "bb538baf-e867-451f-b70d-98c48629c8e9",
+        "simplified": "可是",
+        "traditional": "",
+        "pinyin": "kěshì",
+        "english": "but, however"
+      },
+      {
+        "id": "b8e5350f-8f85-4022-9140-5331652491a0",
+        "simplified": "还",
+        "traditional": "還",
+        "pinyin": "hái",
+        "english": "also, in addition"
+      },
+      {
+        "id": "f2589800-c381-4dc3-b6ed-3feea3af09c2",
+        "simplified": "看",
+        "traditional": "",
+        "pinyin": "kàn",
+        "english": "to see, look, watch, read"
+      },
+      {
+        "id": "668bf091-d553-4d27-b3fa-aed210f49ebf",
+        "simplified": "电视",
+        "traditional": "電視",
+        "pinyin": "diànshì",
+        "english": "television"
+      },
+      {
+        "id": "3d09e848-0b6a-4baf-b685-276ce972cbfe",
+        "simplified": "晚上",
+        "traditional": "",
+        "pinyin": "wǎngshàng",
+        "english": "night, at night"
+      },
+      {
+        "id": "7cf0cdfb-aba1-4261-ab64-b00085d572d6",
+        "simplified": "常常",
+        "traditional": "",
+        "pinyin": "chángcháng",
+        "english": "often"
+      },
+      {
+        "id": "f2e5a930-e759-40f4-b1d7-a6cf7fcc9d2d",
+        "simplified": "家",
+        "traditional": "",
+        "pinyin": "jiā",
+        "english": "house, home, family"
+      },
+      {
+        "id": "abb63438-4c4e-4261-8d79-f61be8831e59",
+        "simplified": "跑步",
+        "traditional": "",
+        "pinyin": "pǎo bù",
+        "english": "to run, to jog"
+      },
+      {
+        "id": "057870a2-725f-42d5-a700-4af0597ee233",
+        "simplified": "唱歌",
+        "traditional": "",
+        "pinyin": "chàng gē",
+        "english": "to sing"
+      },
+      {
+        "id": "cb21d9f7-55b4-4c6e-9c31-41661e194b08",
+        "simplified": "跳舞",
+        "traditional": "",
+        "pinyin": "tiào wǔ",
+        "english": "to dance"
+      },
+      {
+        "id": "8e64c547-0fe6-4adf-a787-a4ffc6dd5384",
+        "simplified": "上午",
+        "traditional": "",
+        "pinyin": "shàngwǔ",
+        "english": "later morning"
+      },
+      {
+        "id": "08a05b7a-27e0-4255-b6ee-bb12d13fb4a3",
+        "simplified": "太太",
+        "traditional": "",
+        "pinyin": "tàitai",
+        "english": "wife, Mrs."
       }
     ]
   }
