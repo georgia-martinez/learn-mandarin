@@ -10,6 +10,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import StyleOutlinedIcon from '@mui/icons-material/StyleOutlined'
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined'
+import ThermostatOutlinedIcon from '@mui/icons-material/ThermostatOutlined'
 import type { SvgIconComponent } from '@mui/icons-material'
 
 interface Exercise {
@@ -31,6 +32,12 @@ const exercises: Exercise[] = [
     description: "Practice saying a random date in Mandarin.",
     icon: CalendarMonthOutlinedIcon,
     path: '/date',
+  },
+  {
+    title: 'Temperature',
+    description: "Practice saying a random temperature in Mandarin.",
+    icon: ThermostatOutlinedIcon,
+    path: '/temperature',
   },
 ]
 

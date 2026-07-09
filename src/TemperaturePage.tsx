@@ -14,27 +14,25 @@ import Typography from '@mui/material/Typography'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import Ruby from './Ruby'
-import { describeDate, randomDateInYear, type HanziPinyin } from './chineseDate'
+import { describeTemperature, randomTemperature } from './chineseTemperature'
+import type { HanziPinyin } from './chineseNumber'
 
 const QUESTION_LABEL: HanziPinyin = {
-  hanzi: '今天是幾年，幾月，幾號，星期幾？',
-  pinyin: 'Jīn tiān shì jǐ nián jǐ yuè jǐ hào xīng qī jǐ',
+  hanzi: '今天氣溫幾度？',
+  pinyin: 'Jīn tiān qì wēn jǐ dù',
 }
 
-const TODAY_IS: HanziPinyin = { hanzi: '今天是', pinyin: 'Jīn tiān shì' }
-
-export default function DatePage() {
+export default function TemperaturePage() {
   const navigate = useNavigate()
-  const currentYear = useMemo(() => new Date().getFullYear(), [])
-  const [date, setDate] = useState<Date>(() => randomDateInYear(currentYear))
+  const [celsius, setCelsius] = useState<number>(() => randomTemperature())
   const [revealed, setRevealed] = useState(false)
 
-  const info = useMemo(() => describeDate(date), [date])
+  const info = useMemo(() => describeTemperature(celsius), [celsius])
 
-  const newDate = useCallback(() => {
-    setDate(randomDateInYear(currentYear))
+  const newTemperature = useCallback(() => {
+    setCelsius(randomTemperature())
     setRevealed(false)
-  }, [currentYear])
+  }, [])
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -44,7 +42,7 @@ export default function DatePage() {
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, ml: 1 }}>
-            Date · 日期
+            Temperature · 氣溫
           </Typography>
         </Toolbar>
       </AppBar>
@@ -57,7 +55,7 @@ export default function DatePage() {
               <Stack spacing={2}>
                 <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, flexWrap: 'wrap' }}>
                   <Typography variant="overline" color="text.secondary">
-                    Date
+                    Temperature
                   </Typography>
                   <Typography variant="h5" component="div" sx={{ fontWeight: 600 }}>
                     {info.englishLabel}
@@ -67,7 +65,7 @@ export default function DatePage() {
                 <Box>
                   <Ruby item={QUESTION_LABEL} size="1.75rem" />
                   <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                    (Today is which year, which month, which date, which day of the week?)
+                    (What is today's temperature — how many degrees?)
                   </Typography>
                 </Box>
               </Stack>
@@ -82,17 +80,15 @@ export default function DatePage() {
                   <Typography variant="overline" color="text.secondary">
                     Answer
                   </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'flex-end', flexWrap: 'wrap', rowGap: 1 }}>
-                    <Ruby item={TODAY_IS} />
-                    <Ruby item={info.year} />
-                    <Typography sx={{ fontSize: '2rem', alignSelf: 'flex-end', mx: 0.25 }}>，</Typography>
-                    <Ruby item={info.month} />
-                    <Typography sx={{ fontSize: '2rem', alignSelf: 'flex-end', mx: 0.25 }}>，</Typography>
-                    <Ruby item={info.day} />
-                    <Typography sx={{ fontSize: '2rem', alignSelf: 'flex-end', mx: 0.25 }}>，</Typography>
-                    <Ruby item={info.weekday} />
-                    <Typography sx={{ fontSize: '2rem', alignSelf: 'flex-end', mx: 0.25 }}>。</Typography>
-                  </Box>
+                  <Ruby item={info.exact} />
+                  {info.approximate ? (
+                    <Box>
+                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                        Approximate (X-something degrees)
+                      </Typography>
+                      <Ruby item={info.approximate} size="1.5rem" />
+                    </Box>
+                  ) : null}
                 </Stack>
               </CardContent>
             </Card>
@@ -108,9 +104,9 @@ export default function DatePage() {
               variant={revealed ? 'contained' : 'outlined'}
               size="large"
               startIcon={<RefreshIcon />}
-              onClick={newDate}
+              onClick={newTemperature}
             >
-              New Date
+              New Temperature
             </Button>
           </Stack>
         </Stack>
