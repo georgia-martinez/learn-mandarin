@@ -3,6 +3,8 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider, createTheme, type Shadows } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
+import HomePage from './HomePage'
+import DatePage from './DatePage'
 import DeckListPage from './DeckListPage'
 import DeckEditPage from './DeckEditPage'
 import StudyPage from './StudyPage'
@@ -67,7 +69,9 @@ function App() {
       <CssBaseline />
       <HashRouter>
         <Routes>
-          <Route path="/" element={<DeckListPage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/decks" element={<DeckListPage />} />
+          <Route path="/date" element={<DatePage />} />
           <Route path="/deck/:deckId" element={<DeckEditPage />} />
           <Route path="/study" element={<StudyPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />

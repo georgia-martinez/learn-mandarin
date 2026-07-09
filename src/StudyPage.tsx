@@ -275,7 +275,7 @@ export default function StudyPage() {
 
   useLayoutEffect(() => {
     if (!state) {
-      void navigate('/', { replace: true })
+      void navigate('/decks', { replace: true })
     }
   }, [state, navigate])
 

@@ -99,7 +99,7 @@ export default function DeckEditPage() {
       if (!cancelled) {
         const found = decks.find((d) => d.id === deckId) ?? null
         if (!found) {
-          void navigate('/', { replace: true })
+          void navigate('/decks', { replace: true })
           return
         }
         setDeck(found)
@@ -241,7 +241,7 @@ export default function DeckEditPage() {
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <AppBar position="sticky" color="primary" enableColorOnDark>
         <Toolbar>
-          <IconButton color="inherit" edge="start" onClick={() => void navigate('/')} aria-label="Back">
+          <IconButton color="inherit" edge="start" onClick={() => void navigate('/decks')} aria-label="Back">
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, ml: 1 }}>

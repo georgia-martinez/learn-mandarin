@@ -17,6 +17,7 @@ import Stack from '@mui/material/Stack'
 import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import StyleOutlinedIcon from '@mui/icons-material/StyleOutlined'
 import type { Deck } from './deckStorage'
@@ -68,7 +69,10 @@ export default function DeckListPage() {
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <AppBar position="sticky" color="primary" enableColorOnDark>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <IconButton color="inherit" edge="start" onClick={() => void navigate('/')} aria-label="Back">
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, ml: 1 }}>
             Learn Mandarin
           </Typography>
           <Typography variant="body2" sx={{ opacity: 0.9 }}>
